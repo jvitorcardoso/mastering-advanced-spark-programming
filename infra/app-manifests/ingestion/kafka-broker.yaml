@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kafka-broker
+  namespace: gitops
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/owshq-academy/trn-mst-advanced-spark-programming.git'
+    path: infra/yamls/ingestion/broker/normal/
+    targetRevision: HEAD
+    directory:
+      recurse: true
+      jsonnet: {}
+  destination:
+    name: 'do-nyc1-orn-polaris-dev'
+    namespace: ingestion
+    server: ''
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: strimzi-kafka-operator
+  namespace: gitops
+spec:
+  destination:
+    name: 'do-nyc1-orn-polaris-dev'
+    namespace: ingestion
+    server: ''
+  project: default
+  source:
+    chart: strimzi-kafka-operator
+    repoURL: https://strimzi.io/charts/
+    targetRevision: 0.39.0
+    helm:
+      parameters:
+        - name: "resources.limits.memory"
+          value: "512Mi"
+        - name: "resources.requests.memory"
+          value: "512Mi"
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

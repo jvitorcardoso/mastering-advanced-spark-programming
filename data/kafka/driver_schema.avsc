@@ -1,0 +1,10 @@
+{
+  "type": "record",
+  "name": "Srcappdriver",
+  "fields": [
+    {"name": "driver_id", "type": "int"},
+    {"name": "name", "type": "string"},
+    {"name": "license_number", "type": "string"},
+    {"name": "rating", "type": "float"}
+  ]
+}

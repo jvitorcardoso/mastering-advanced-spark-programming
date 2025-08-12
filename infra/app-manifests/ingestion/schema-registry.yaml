@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: schema-registry
+  namespace: gitops
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/owshq-academy/trn-mst-advanced-spark-programming.git'
+    path: infra/helm-charts/cp-schema-registry
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    name: 'do-nyc1-orn-polaris-dev'
+    namespace: default
+    server: ''
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true

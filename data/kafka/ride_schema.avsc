@@ -1,0 +1,28 @@
+{
+  "type": "record",
+  "name": "rides",
+  "namespace": "com.example",
+  "fields": [
+    {"name": "ride_id", "type": "int"},
+    {"name": "driver_id", "type": "int"},
+    {"name": "customer_id", "type": "int"},
+    {
+      "name": "start_location",
+      "type": {
+        "type": "record",
+        "name": "Location",
+        "fields": [
+          {"name": "lat", "type": "float"},
+          {"name": "lon", "type": "float"}
+        ]
+      }
+    },
+    {
+      "name": "end_location",
+      "type": "Location"
+    },
+    {"name": "start_time", "type": "long"},
+    {"name": "end_time", "type": "long"},
+    {"name": "fare", "type": "float"}
+  ]
+}
