@@ -5,7 +5,7 @@ services:
   # Spark Master
   spark-master:
     container_name: spark-master
-    image: owshq-spark:3.5
+    image: owshq-spark:3.5.0
     environment:
       - SPARK_MODE=master
       - SPARK_RPC_AUTHENTICATION_ENABLED=no
@@ -26,7 +26,7 @@ services:
   # Spark Workers
   spark-worker-1:
     container_name: spark-worker-1
-    image: owshq-spark:3.5
+    image: owshq-spark:3.5.0
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
@@ -48,7 +48,7 @@ services:
 
   spark-worker-2:
     container_name: spark-worker-2
-    image: owshq-spark:3.5
+    image: owshq-spark:3.5.0
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
@@ -70,7 +70,7 @@ services:
 
   spark-worker-3:
     container_name: spark-worker-3
-    image: owshq-spark:3.5
+    image: owshq-spark:3.5.0
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
@@ -93,7 +93,7 @@ services:
   # Spark History Server
   spark-history-server:
     container_name: spark-history-server
-    image: owshq-spark-history-server:3.5
+    image: owshq-spark-history-server:3.5.0
     environment:
       - SPARK_HISTORY_UI_PORT=18080
       - SPARK_DAEMON_MEMORY=5g
