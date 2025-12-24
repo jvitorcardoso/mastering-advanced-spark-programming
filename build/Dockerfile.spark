@@ -1,19 +1,50 @@
-FROM docker.io/bitnami/spark:3.5.0
-
-RUN curl -o /opt/bitnami/spark/jars/hadoop-aws-3.3.4.jar https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar && \
-    curl -o /opt/bitnami/spark/jars/aws-java-sdk-bundle-1.12.262.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar
+FROM docker.io/apache/spark:3.5.7
 
 USER root
 
-RUN apt-get update && apt-get install -y python3 python3-pip curl
-RUN mkdir -p /opt/bitnami/spark/logs/events
+# Instalar dependências
+RUN apt-get update && apt-get install -y \
+    curl \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libncursesw5-dev \
+    xz-utils \
+    tk-dev \
+    libxml2-dev \
+    libxmlsec1-dev \
+    libffi-dev \
+    liblzma-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY config/spark/spark-defaults.conf /opt/bitnami/spark/conf/
-COPY config/spark/jars /opt/bitnami/spark/jars
-COPY config/spark/log4j2.properties /opt/bitnami/spark/conf/
+# Instalar Python 3.11
+RUN curl -O https://www.python.org/ftp/python/3.11.9/Python-3.11.9.tgz && \
+    tar -xzf Python-3.11.9.tgz && \
+    cd Python-3.11.9 && \
+    ./configure --enable-optimizations && \
+    make -j$(nproc) && \
+    make altinstall && \
+    cd .. && rm -rf Python-3.11.9* && \
+    ln -sf /usr/local/bin/python3.11 /usr/bin/python3 && \
+    ln -sf /usr/local/bin/pip3.11 /usr/bin/pip3
 
-COPY requirements.txt /opt/bitnami/spark/conf/requirements.txt
-RUN pip3 install -r /opt/bitnami/spark/conf/requirements.txt
-RUN mkdir -p /opt/bitnami/spark/logs/events
+# Baixar JARs do AWS
+RUN curl -o /opt/spark/jars/hadoop-aws-3.3.4.jar https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar && \
+    curl -o /opt/spark/jars/aws-java-sdk-bundle-1.12.262.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar
+
+# Criar diretórios
+RUN mkdir -p /opt/spark/logs/events
+
+# Copiar configurações
+COPY config/spark/spark-defaults.conf /opt/spark/conf/
+COPY config/spark/jars /opt/spark/jars/
+COPY config/spark/log4j2.properties /opt/spark/conf/
+
+# Instalar dependências Python
+COPY requirements.txt /opt/spark/conf/requirements.txt
+RUN pip3 install --no-cache-dir -r /opt/spark/conf/requirements.txt
 
 EXPOSE 8080 18080
