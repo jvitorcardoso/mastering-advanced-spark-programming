@@ -114,3 +114,16 @@ services:
       - spark-worker-1
       - spark-worker-2
       - spark-worker-3
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: data-lake
+      MINIO_ROOT_PASSWORD: 12620ee6-2162-11ee-be56-0242ac120002
+    command: server /data --console-address ":9001"
+    volumes:
+      - ./storage/minio:/data

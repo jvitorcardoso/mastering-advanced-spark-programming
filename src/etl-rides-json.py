@@ -55,14 +55,14 @@ spark = SparkSession \
     .config("spark.hadoop.fs.s3a.fast.upload", True) \
     .config("spark.hadoop.fs.s3a.multipart.size", 104857600) \
     .config("fs.s3a.connection.maximum", 100) \
-    .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
+    .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
     .config("spark.delta.logStore.class", "org.apache.spark.sql.delta.storage.S3SingleDriverLogStore") \
     .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
     .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog") \
     .config('spark.hadoop.fs.s3a.aws.credentials.provider', 'org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider') \
     .getOrCreate()
 
-file_rides_loc = "s3a://landing/com.owshq.data/mongodb/rides/json/*.json"
+file_rides_loc = "s3a://landing/yelp/yelp_academic_dataset_business.json"
 
 df_rides = spark.read \
     .format("json") \
@@ -72,6 +72,6 @@ df_rides = spark.read \
 
 print(f"number of partitions: {df_rides.rdd.getNumPartitions()}")
 
-df_rides.count()
+print(f"count: {df_rides.count()}")
 
 spark.stop()
